@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Subjects | StudyFlow{% endblock %}
+{% block content %}
+<div class="page-head">
+    <div>
+        <p class="eyebrow">SETUP</p>
+        <h1>Your Subjects</h1>
+        <p>Add your subjects and chapters before generating your study plan.</p>
+    </div>
+</div>
+
+<form class="form-card" method="POST">
+    <div class="form-grid">
+        <label>Subject name
+            <input name="name" placeholder="e.g. Python" required>
+        </label>
+        <label>Exam date
+            <input type="date" name="exam_date" required>
+        </label>
+        <label>Chapters
+            <input name="chapters" placeholder="e.g. OOP, Flask, NumPy" required>
+        </label>
+        <label>Hours per day
+            <input type="number" name="hours_per_day" min="0.25" max="12" step="0.25" value="2" required>
+        </label>
+        <label>Difficulty
+            <select name="difficulty">
+                <option>Easy</option>
+                <option selected>Medium</option>
+                <option>Hard</option>
+            </select>
+        </label>
+    </div>
+    <button class="btn" type="submit">Add Subject</button>
+</form>
+
+<div class="cards">
+{% for s in subjects %}
+    <div class="card">
+        <div class="card-top">
+            <h3>{{ s["name"] }}</h3>
+            <span class="badge {{ s['difficulty']|lower }}">{{ s["difficulty"] }}</span>
+        </div>
+        <p><strong>Chapters:</strong> {{ s["chapters"] }}</p>
+        <p><strong>Exam:</strong> {{ s["exam_date"] }}</p>
+        <p><strong>Daily time:</strong> {{ s["hours_per_day"] }} hours</p>
+        <form method="POST" action="{{ url_for('delete_subject', subject_id=s['id']) }}">
+            <button class="danger" onclick="return confirm('Delete this subject?')">Delete</button>
+        </form>
+    </div>
+{% endfor %}
+</div>
+{% endblock %}

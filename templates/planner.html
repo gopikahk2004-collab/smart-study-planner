@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Study Plan | StudyFlow{% endblock %}
+{% block content %}
+<div class="page-head">
+    <div>
+        <p class="eyebrow">YOUR PLAN</p>
+        <h1>Study Schedule</h1>
+        <p>Generate a plan based on your subjects, difficulty and available study time.</p>
+    </div>
+    <form method="POST">
+        <button class="btn" type="submit">✨ Generate / Regenerate</button>
+    </form>
+</div>
+
+<div class="tip">💡 <strong>Tip:</strong> Complete smaller tasks first to build momentum.</div>
+
+<div class="task-list">
+{% for task in tasks %}
+    <div class="task {% if task['completed'] %}done{% endif %}">
+        <form method="POST" action="{{ url_for('toggle_task', task_id=task['id']) }}">
+            <button class="check" title="Toggle complete">
+                {% if task['completed'] %}✓{% else %}○{% endif %}
+            </button>
+        </form>
+        <div class="task-info">
+            <strong>{{ task["chapter"] }}</strong>
+            <span>{{ task["subject"] }}</span>
+        </div>
+        <div class="task-meta">
+            <span>📅 {{ task["task_date"] }}</span>
+            <span>⏱ {{ task["minutes"] }} min</span>
+        </div>
+    </div>
+{% else %}
+    <div class="empty">
+        No plan yet. Add subjects, then click <strong>Generate / Regenerate</strong>.
+    </div>
+{% endfor %}
+</div>
+
+<div class="pomodoro">
+    <h2>🍅 Pomodoro Timer</h2>
+    <div id="timer">25:00</div>
+    <div>
+        <button class="btn" onclick="startTimer()">Start</button>
+        <button class="btn secondary" onclick="resetTimer()">Reset</button>
+    </div>
+</div>
+{% endblock %}
